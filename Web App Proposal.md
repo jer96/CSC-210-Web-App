@@ -13,7 +13,9 @@ The UR market application is solving the problem of students and faculty trying 
 Minimum Requirements:
 
 •Users are able to create a seller profile which will store their photo, contact information, name, and graduation year
+
 •Profiles will be able to be viewed in a page explicitly dedicated to their profile where they can  edited, deleted  and update any information at any time, even delete their account. All done without reloading the page. (Ajax)
+
 •Once users have a profile they are given the opportunity to create listings for products they would like to sell with a picture or gallery of pictures of the product, product description, product condition, category(electronics, dorm supplies, textbook, clothes, school supplies, etc.) , asking price(price can be negotiated between customer and seller, negotiations are not public i.e.(bidding system)). This listing will be able to be edited, deleted and updated by the user at any time and after the product has been sold the listing will be deleted. 
 
 What makes UR market so special?
