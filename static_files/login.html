@@ -1,0 +1,111 @@
+<html>
+
+<head>
+  <style type="text/css">
+  body{ background-image: url("ur.jpg"); background-repeat: repeat-x;}
+  h1{color:yellow;font-size:48; text-align: center;}
+  p{text-align: center; color: yellow;}
+  div{
+    color:yellow ;text-align:center;font-size: 25
+  }
+ 
+  </style>
+
+<title>UR Market</title>
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+  // define a generic Ajax error handler:
+  // http://api.jquery.com/ajaxerror/
+  $(document).ajaxError(function() {
+    alert("Sorry, there was a problem!");
+
+  });
+  $("#createButton").click(function() {
+    window.location.href = "createUser.html";
+    
+  });
+
+   $("#login").click(function() {
+    var x = getCookie("username");
+    if(x === ""){
+    $.ajax({
+      // The URL for the request -- note the simple REST API!
+      // all URLs are relative to http://localhost:3000/
+      url: "users/" + $("#usernameInput").val(),
+      type: "GET",
+      dataType : "json", // this URL returns data in JSON format
+
+      success: function( data ) {
+        console.log("You received some data!", data);
+//http://www.w3schools.com/js/js_cookies.asp
+        if (data.username) {
+          if(data.password === $("#passwordInput").val()){
+            document.cookie = "username = " + data.username;
+            window.location.href = "homepage.html";
+          }
+          else{
+            $("#status").html("You did not input the right password!!!!!");
+          }
+
+        } 
+        else {
+          $("#status").html("You did not input the right password!!!!");
+        }
+      },
+    });
+  }
+  else{
+    alert("Someone is already logged in.");
+  }
+  });
+  });
+function delete_cookie(name) {
+  document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
+function getCookie(c_name) {
+    if (document.cookie.length > 0) {
+        c_start = document.cookie.indexOf(c_name + "=");
+        if (c_start != -1) {
+            c_start = c_start + c_name.length + 1;
+            c_end = document.cookie.indexOf(";", c_start);
+            if (c_end == -1) {
+                c_end = document.cookie.length;
+            }
+            return unescape(document.cookie.substring(c_start, c_end));
+        }
+    }
+    return "";
+}
+
+</script>
+
+
+</head>
+
+  <body>
+  <h1>Welcome to UR Market</h1>
+
+    <p>
+    Email: <input id= "usernameInput" type="text" size="20"/>
+    Password: <input id="passwordInput" type="password" size="20"/>
+    </p>
+
+    <p>
+    <button id="createButton">Create new user</button>
+    <button id="login">Log in</button>
+    </p>
+     <div id = "status"></div>
+    
+
+  <p>
+   UR Market is a place for University of Rochester students and faculty  to buy and sell items from one another. UR Market
+   doesn't charge for service, ultimately making the buying/selling process stay within the University community and quick and easy for YOU! 
+  
+  </p>
+ 
+  </body>
+</html>

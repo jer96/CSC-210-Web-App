@@ -1,0 +1,224 @@
+<html>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+
+  // define a generic Ajax error handler:
+  // http://api.jquery.com/ajaxerror/
+  $(document).ajaxError(function() {
+    alert("Sorry, there was a problem!");
+  });
+
+
+  $("#displayButton").click(function() {
+    var x = getCookie("username");
+    $.ajax({
+      // The URL for the request -- note the simple REST API!
+      // all URLs are relative to http://localhost:3000/
+      url: "users/" + x,
+      type: "GET",
+      dataType : "json", // this URL returns data in JSON format
+
+      success: function(data) {
+        console.log("You received some data!", data);
+
+        if (data.username) {
+          $("#usernameDiv").html("Username: " + data.username);
+          $("#fnameDiv").html("First name is: " + data.fname);
+          $("#lnameDiv").html("Last name is: " + data.lname);
+          $("#phoneDiv").html("Phone Number: " + data.phone);
+          $("#gradYearDiv").html("Class of: " + data.year);
+          $("#iconImg").attr("src", data.icon);
+        } 
+        else {
+          $("#status").html("Error: could not find user!");
+          // clear the profile display
+          $("#fnameDiv").html("");
+          $("lnameDiv").html("");
+          $("#nameDiv").html("");
+          $("#phoneDiv").html("");
+          $("#gradYearDiv").html("");
+          $("#iconImg").attr("src","");
+        }
+      },
+    });
+  });
+  $("#homepageButton").click(function() {
+    window.location.href = "homepage.html";
+    });
+
+  $("#updateButton").click(function() {
+    var x = getCookie("username");
+    console.log(x);
+    $.ajax({
+      // The URL for the request -- note the simple REST API!
+      // all URLs are relative to http://localhost:3000/
+      url: "users/" + x,
+      type: "PUT",
+      dataType : "text", // this URL returns a plain text string, not JSON
+
+      data : { 
+               username :  $("#usernamebox").val(),
+               fname: $("#firstNameBox").val(),
+               lname: $("#lastNameBox").val(),
+               password: $("#passBox").val(),
+               phone: $("#phoneBox").val(),
+               year: $("#gradBox").val(),
+               icon: $("#iconBox").val()
+             },
+
+      success: function( data ) {   
+        console.log("You received some data!", data);
+        if (data == 'OK') {
+          $("#status").html("Successfully updated user");
+        } else {
+          $("#status").html("Error: could not update user");
+        }
+      },
+    });
+  });
+
+  $("#deleteButton").click(function() {
+    //I took out confirm pop out right here because i disabled pop ups in chrome
+    flag = true;
+    if(flag == true){
+    delete_cookie("username");
+    $.ajax({
+      // The URL for the request -- note the simple REST API!
+      // all URLs are relative to http://localhost:3000/
+      url: "users/" + $("#usernamebox").val(),
+      type: "DELETE",
+      dataType : "text", // this URL returns a plain this text string, not JSON
+
+      success: function( data ) {
+        console.log("You received some data!", data);
+        if (data == 'OK') {
+          $("#status").html("Successfully deleted!");
+        } else {
+          $("#status").html("Error: could not delete!");
+        }
+      },
+    });
+    window.location.href = "login.html";
+   }
+   else{
+  alert("You made the right decision");
+  } 
+  });
+ 
+ function delete_cookie(name) {
+  document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
+function getCookie(c_name) {
+    if (document.cookie.length > 0) {
+        c_start = document.cookie.indexOf(c_name + "=");
+        if (c_start != -1) {
+            c_start = c_start + c_name.length + 1;
+            c_end = document.cookie.indexOf(";", c_start);
+            if (c_end == -1) {
+                c_end = document.cookie.length;
+            }
+            return unescape(document.cookie.substring(c_start, c_end));
+        }
+    }
+    return "";
+}
+window.onload = function(){
+    var x = getCookie("username");
+    $.ajax({
+      // The URL for the request -- note the simple REST API!
+      // all URLs are relative to http://localhost:3000/
+      url: "users/" + x,
+      type: "GET",
+      dataType : "json", // this URL returns data in JSON format
+
+      success: function( data ) {
+        console.log("Received User Load Components", data);
+
+        if (data.username) {
+          console.log("Passing");
+          document.getElementById('usernamebox').value = data.username;
+          document.getElementById('firstNameBox').value = data.fname;
+          document.getElementById('lastNameBox').value = data.lname;
+          document.getElementById('passBox').value = data.password;
+          document.getElementById('phoneBox').value= data.phone;
+          document.getElementById('gradBox').value = data.year;
+          document.getElementById('iconBox').value = data.icon;
+        } 
+        else {
+          document.getElementById('usernamebox').value = "";
+          document.getElementById('firstNameBox').value = "";
+          document.getElementById('lastNameBox').value = "";
+          document.getElementById('passBox').value = "";
+          document.getElementById('phoneBox').value = "";
+          document.getElementById('gradBox').value = "";
+          document.getElementById('iconBox').value = "";
+        }
+      },
+    });
+}
+
+});
+
+
+</script>
+<head>
+  <style type="text/css">
+  body{ background-color: white }
+  .class{color:blue; text-align: left;}
+  #usernamebox {margin-right: 20px;}
+  #gradBox{margin-left:10px;}
+  #phoneBox{margin-left:25px;}
+  #iconBox{margin-left: 0px;}
+  #firstNameBox{margin-right:20px;}
+  #passBox{margin-left:57px;}
+
+  </style>
+
+</head>
+
+  <body>
+  <title>UR Market Edit Account</title>
+
+  <h1>Edit your profile details here!</h1>
+
+  <p5 class = "class"> Username: <input id="usernamebox" type="text" size="14"/> </p5>    
+  <p0 class = "class"> First Name: <input id="firstNameBox" type="text" size="14"/> </p0>    
+  <p1 class = "class"> Last Name: <input id="lastNameBox" type="text" size="19"/> </p1>
+  <br>
+  <br>
+  <p1 class = "class">Password: <input id="passBox" type="text" size="20"/> </p1>
+  <br>
+  <br>
+  <p2 class = "class"> Phone number: <input id="phoneBox" type="text" size="20"/> </p2>
+  <br>
+  <br>
+  <p3 class = "class"> Graduation Year: <input id="gradBox" type="text" size="20"/></p3>
+  <br>
+  <br>
+  <p4 class = "class"> User Icon (enter URL for image): <input id="iconBox" type="text" size="20"/></
+  <br>
+   
+
+    <p>
+    <button id="deleteButton">Delete account</button>
+    <button id="displayButton">Display Current Info</button>
+    <button id="updateButton">Update Information</button>
+    <button id="homepageButton">Back to Homepage</button>
+     
+    </p>
+
+<!--empty place holders to show info on screen-->
+  <div id = "status"></div>
+  <div id = "usernameDiv"></div>
+  <div id = "fnameDiv"></div>
+  <div id = "lnameDiv"></div>
+  <div id = "phoneDiv"></div>
+  <div id = "gradYearDiv"></div>
+  <img id = "iconImg" style= "width: 300px"/> 
+ 
+  </body>
+</html>

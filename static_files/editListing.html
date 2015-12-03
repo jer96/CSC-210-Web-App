@@ -1,0 +1,154 @@
+<html>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+
+  // define a generic Ajax error handler:
+  // http://api.jquery.com/ajaxerror/
+  $(document).ajaxError(function() {
+    alert("Sorry, there was a problem!");
+  });
+  function delete_cookie(name) {
+  document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
+function getCookie(c_name) {
+    if (document.cookie.length > 0) {
+        c_start = document.cookie.indexOf(c_name + "=");
+        if (c_start != -1) {
+            c_start = c_start + c_name.length + 1;
+            c_end = document.cookie.indexOf(";", c_start);
+            if (c_end == -1) {
+                c_end = document.cookie.length;
+            }
+            return unescape(document.cookie.substring(c_start, c_end));
+        }
+    }
+    return "";
+}
+ $("#displayButton").click(function() {
+    var x = getCookie("username");
+    console.log(x);
+
+    $.ajax({
+      // The URL for the request -- note the simple REST API!
+      // all URLs are relative to http://localhost:3000/
+      url: "listings/" + x,
+      type: "GET",
+      dataType : "json", // this URL returns data in JSON format
+
+      success: function(data) {
+        console.log("You received some data!", data);
+        console.log(data.itemName);
+
+        if (data.username) {
+          console.log("we have data!!!!");
+          $("#itemName").html("Item Name: " + data.itemName);
+          $("#itemCond").html("Item Condition: " + data.itemCondition);
+          $("#itemPrice").html("Price: " + data.itemPrice);
+          $("#itemDesc").html("Description: " + data.itemDescription);
+          $("#itemCat").html("Category: " + data.category);
+        } 
+        else {
+          $("#status").html("Error: could not find user!");
+          // clear the profile display
+          $("#itemName").html("Item name: " + data.itemName);
+          $("#itemCond").html("Item Condition: " + data.itemCondition);
+          $("#itemPrice").html("Price: " + data.itemPrice);
+          $("#itemDesc").html("Description: " + data.itemDescription);
+          $("#itemCat").html("Category: " + data.category);
+        }
+      },
+    });
+  });
+
+ $("#homepageButton").click(function() {
+    window.location.href = "homepage.html";
+    });
+  window.onload = function(){
+    var x = getCookie("username");
+     $.ajax({
+
+      // The URL for the request -- note the simple REST API!
+      // all URLs are relative to http://localhost:3000/
+      url: "users/" + x,
+      type: "GET",
+      dataType : "json", // this URL returns data in JSON format
+
+      success: function(data) {
+        //console.log("You received some data!", data);
+
+        if (data.username) {
+          $("#usernameDiv").html("Username: " + data.username);
+          $("#fnameDiv").html("First name is: " + data.fname);
+          $("#lnameDiv").html("Last name is: " + data.lname);
+          $("#phoneDiv").html("Phone Number: " + data.phone);
+          $("#gradYearDiv").html("Class of: " + data.year);
+          $("#iconImg").attr("src", data.icon);
+        } 
+        else {
+          $("#status").html("Error: could not find user!");
+          // clear the profile display
+          $("#fnameDiv").html("");
+          $("lnameDiv").html("");
+          $("#nameDiv").html("");
+          $("#phoneDiv").html("");
+          $("#gradYearDiv").html("");
+          $("#iconImg").attr("src","");
+        }
+      },
+    });
+}
+});
+
+
+
+
+</script>
+
+<head>
+  <style type="text/css">
+  body{ background-color: white }
+  .class{color:blue; text-align: left;}
+  #usernamebox {margin-right: 20px;}
+  #gradBox{margin-left:10px;}
+  #phoneBox{margin-left:25px;}
+  #iconBox{margin-left: 0px;}
+  #firstNameBox{margin-right:20px;}
+  #passBox{margin-left:57px;}
+
+  </style>
+
+</head>
+
+  <body>
+  <title>UR Market Edit Listing Account</title>
+
+  <h1>Edit your Listings here!</h1>
+   
+    <p>
+    <button id="deleteButton">Delete Listing</button>
+    <button id="displayButton">Display Current Listings</button>
+    <button id="updateButton">Update Listing Info</button>
+    <button id="homepageButton">Back to Homepage</button>
+     
+    </p>
+
+<!--empty place holders to show info on screen-->
+  <div id = "status"></div>
+  <div id = "usernameDiv"></div>
+  <div id = "fnameDiv"></div>
+  <div id = "lnameDiv"></div>
+  <div id = "phoneDiv"></div>
+  <div id = "gradYearDiv"></div>
+  <img id = "iconImg" style= "width: 300px"/> 
+  <div id= "itemName"></div>
+  <div id= "itemCond"></div>
+  <div id= "itemPrice"></div>
+  <div id= "itemDesc"></div>
+  <div id= "itemCat"></div>
+ 
+  </body>
+</html>
