@@ -1,13 +1,19 @@
 <html>
 
 <head>
+<head>
   <style type="text/css">
-  body{ background-image: url("ur.jpg"); background-repeat: repeat-x;}
+  body{ background-image: url("ur1.jpg"); background-repeat: repeat-x;}
   h1{color:yellow;font-size:48; text-align: center;}
-  p{text-align: center; color: yellow;}
+  p{text-align: center; color: white;}
   div{
-    color:yellow ;text-align:center;font-size: 25
+    color:white ;text-align:center;font-size: 25
   }
+
+  img{ display: block;
+       margin-left: auto;
+       margin-right: auto;
+    border: 10px solid yellow;}
  
   </style>
 
@@ -21,7 +27,7 @@ $(document).ready(function() {
   // define a generic Ajax error handler:
   // http://api.jquery.com/ajaxerror/
   $(document).ajaxError(function() {
-    alert("Sorry, there was a problem!");
+    console.log(error);
 
   });
   $("#createButton").click(function() {
@@ -29,8 +35,12 @@ $(document).ready(function() {
     
   });
 
+  
+
    $("#login").click(function() {
     var x = getCookie("username");
+    
+
     if(x === ""){
     $.ajax({
       // The URL for the request -- note the simple REST API!
@@ -40,29 +50,30 @@ $(document).ready(function() {
       dataType : "json", // this URL returns data in JSON format
 
       success: function( data ) {
-        console.log("You received some data!", data);
-//http://www.w3schools.com/js/js_cookies.asp
-        if (data.username) {
-          if(data.password === $("#passwordInput").val()){
-            document.cookie = "username = " + data.username;
-            window.location.href = "homepage.html";
+        
+        if (data.password === $("#passwordInput").val()){
+          document.cookie = "username = " + data.username;
+           window.location.href = "homepage.html";
           }
-          else{
-            $("#status").html("You did not input the right password!!!!!");
-          }
+    else{
+      $("#status").html("Incorrect Password!");
+  }
 
-        } 
-        else {
-          $("#status").html("You did not input the right password!!!!");
-        }
+                    
       },
+      error: function(XMLHttpRequest, textStatus, errorThrown) {
+      $("#status").html("You dont have an account sign up above!");
+  }
+
     });
   }
   else{
     alert("Someone is already logged in.");
   }
+
   });
-  });
+
+
 function delete_cookie(name) {
   document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 }
@@ -80,32 +91,38 @@ function getCookie(c_name) {
     }
     return "";
 }
+});
+
 
 </script>
 
 
 </head>
 
-  <body>
+ <body>
   <h1>Welcome to UR Market</h1>
 
     <p>
     Email: <input id= "usernameInput" type="text" size="20"/>
+    </p>
+    <p>
     Password: <input id="passwordInput" type="password" size="20"/>
     </p>
 
     <p>
-    <button id="createButton">Create new user</button>
-    <button id="login">Log in</button>
+    <button id="createButton">Sign Up</button>
+    <button id="login">Log In</button>
     </p>
      <div id = "status"></div>
     
 
   <p>
    UR Market is a place for University of Rochester students and faculty  to buy and sell items from one another. UR Market
-   doesn't charge for service, ultimately making the buying/selling process stay within the University community and quick and easy for YOU! 
+   doesn't charge for service, ultimately making the buying and selling process stay within the University community and quick and easy for you! 
   
   </p>
+
+  <img id = "iconImg" style= "width: 300px" src = "logo.jpg"></img> 
  
   </body>
 </html>

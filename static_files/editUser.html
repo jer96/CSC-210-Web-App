@@ -9,7 +9,7 @@ $(document).ready(function() {
   // define a generic Ajax error handler:
   // http://api.jquery.com/ajaxerror/
   $(document).ajaxError(function() {
-    alert("Sorry, there was a problem!");
+    console.log(error);
   });
 
 
@@ -82,16 +82,15 @@ $(document).ready(function() {
   });
 
   $("#deleteButton").click(function() {
-    //I took out confirm pop out right here because i disabled pop ups in chrome
-    flag = true;
-    if(flag == true){
+    var r = confirm("Are you sure you want to delete your account");
+    if(r == true){
     delete_cookie("username");
     $.ajax({
       // The URL for the request -- note the simple REST API!
       // all URLs are relative to http://localhost:3000/
       url: "users/" + $("#usernamebox").val(),
       type: "DELETE",
-      dataType : "text", // this URL returns a plain this text string, not JSON
+      dataType : "text",
 
       success: function( data ) {
         console.log("You received some data!", data);
@@ -103,10 +102,11 @@ $(document).ready(function() {
       },
     });
     window.location.href = "login.html";
-   }
-   else{
-  alert("You made the right decision");
-  } 
+  }
+  else{
+    console.log("perfect");
+  }
+    
   });
  
  function delete_cookie(name) {
@@ -167,48 +167,33 @@ window.onload = function(){
 </script>
 <head>
   <style type="text/css">
-  body{ background-color: white }
-  .class{color:blue; text-align: left;}
-  #usernamebox {margin-right: 20px;}
-  #gradBox{margin-left:10px;}
-  #phoneBox{margin-left:25px;}
-  #iconBox{margin-left: 0px;}
-  #firstNameBox{margin-right:20px;}
-  #passBox{margin-left:57px;}
+   body{ background-image: url("ur1.jpg");
+    background-repeat: repeat-x;
+    text-align: center}
+
+  h1, p, div,img {color: white;}
 
   </style>
 
 </head>
 
   <body>
-  <title>UR Market Edit Account</title>
+    <title>UR Market Edit User</title>
 
-  <h1>Edit your profile details here!</h1>
+  <h1>Edit your profile details below:</h1>
 
-  <p5 class = "class"> Username: <input id="usernamebox" type="text" size="14"/> </p5>    
-  <p0 class = "class"> First Name: <input id="firstNameBox" type="text" size="14"/> </p0>    
-  <p1 class = "class"> Last Name: <input id="lastNameBox" type="text" size="19"/> </p1>
-  <br>
-  <br>
-  <p1 class = "class">Password: <input id="passBox" type="text" size="20"/> </p1>
-  <br>
-  <br>
-  <p2 class = "class"> Phone number: <input id="phoneBox" type="text" size="20"/> </p2>
-  <br>
-  <br>
-  <p3 class = "class"> Graduation Year: <input id="gradBox" type="text" size="20"/></p3>
-  <br>
-  <br>
-  <p4 class = "class"> User Icon (enter URL for image): <input id="iconBox" type="text" size="20"/></
-  <br>
-   
-
+  <p class = "class"> Username: <input id="usernamebox" type="text" size="20"/> </p>    
+  <p class = "class"> First Name: <input id="firstNameBox" type="text" size="20"/> </p>    
+  <p class = "class"> Last Name: <input id="lastNameBox" type="text" size="20"/> </p>
+  <p class = "class">Password: <input id="passBox" type="text" size="20"/> </p>
+  <p class = "class"> Phone Number: <input id="phoneBox" type="text" size="20"/> </p>
+  <p class = "class"> Graduation Year: <input id="gradBox" type="text" size="20"/></p>
+  <p class = "class"> User Icon (Image URL): <input id="iconBox" type="text" size="20"/></p>
     <p>
-    <button id="deleteButton">Delete account</button>
-    <button id="displayButton">Display Current Info</button>
-    <button id="updateButton">Update Information</button>
-    <button id="homepageButton">Back to Homepage</button>
-     
+    <button id="deleteButton">Delete Account</button>
+    <button id="displayButton">Display Profile</button>
+    <button id="updateButton">Update Account</button>
+    <button id="homepageButton">Return to Homepage</button>
     </p>
 
 <!--empty place holders to show info on screen-->
@@ -218,7 +203,7 @@ window.onload = function(){
   <div id = "lnameDiv"></div>
   <div id = "phoneDiv"></div>
   <div id = "gradYearDiv"></div>
-  <img id = "iconImg" style= "width: 300px"/> 
+  <img id = "iconImg" style= "width: 300px"></img> 
  
   </body>
 </html>

@@ -11,9 +11,17 @@ $(document).ready(function() {
   $(document).ajaxError(function() {
     alert("Sorry, there was a problem!");
   });
+  function validateEmail(email) {
+    var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+}
 
 
   $("#createButton").click(function() {
+    
+    if( validateEmail($("#usernameBox").val() ) ){
+
+
     $.ajax({
       // The URL for the request -- note the simple REST API!
       // all URLs are relative to http://localhost:3000/
@@ -40,6 +48,12 @@ $(document).ready(function() {
       },
 
     });
+  }
+  
+  else{
+    $("#status").html("Invalid email, please enter a valid one.");
+  }
+
   });
 
   $("#displayButton").click(function() {
@@ -122,50 +136,35 @@ $(document).ready(function() {
 </script>
 <head>
   <style type="text/css">
-  body{ background-color: white }
-  .class{color:blue; text-align: left;}
-  #usernameBox {margin-right: 20px;}
-  #gradBox{margin-left:10px;}
-  #phoneBox{margin-left:25px;}
-  #iconBox{margin-left: 0px;}
-  #firstNameBox{margin-right:20px;}
+    body{ background-image: url("ur1.jpg");
+    background-repeat: repeat-x;
+    text-align: center}
 
+  h1, p, div{color: white;}
   </style>
 
 </head>
 
   <body>
-  <title>UR Market</title>
+  <title>UR Market New User</title>
  
-  <h1>Welcome to UR Market create user page!</h1>
+  <h1>UR Market: New User</h1>
   <!--<h1>Here you can create, update or delete your accout</h1>-->
 
-  <p> Please create your account here!</p>
+  <p> Please create your account below:</p>
   
-  <p0 class = "class"> Email: <input id="usernameBox" type="text" size="20"/> </p0>    
-  <p1 class = "class">Password:     <input id="passBox" type="text" size="20"/> </p1>
-  <br>
-  <br>
-  <p0 class = "class"> First Name: <input id="firstNameBox" type="text" size="14"/> </p0>    
-  <p1 class = "class"> Last Name: <input id="lastNameBox" type="text" size="19"/> </p1>
-  <br>
-  <br>
-  <p2 class = "class"> Phone number: <input id="phoneBox" type="text" size="20"/> </p2>
-  <br>
-  <br>
-  <p3 class = "class"> Graduation Year: <input id="gradBox" type="text" size="20"/></p3>
-  <br>
-  <br>
-  <p4 class = "class"> User Icon (input a URL for the image): <input id="iconBox" type="text" size="20"/></
-  <br>
-   
-
+  <p class = "class"> Email: <input id="usernameBox" type="text" size="20"/> </p>    
+  <p class = "class">Password:     <input id="passBox" type="text" size="20"/> </p>
+  <p class = "class"> First Name: <input id="firstNameBox" type="text" size="20"/> </p>    
+  <p class = "class"> Last Name: <input id="lastNameBox" type="text" size="20"/> </p>
+  <p class = "class"> Phone Number: <input id="phoneBox" type="text" size="20"/> </p>
+  <p class = "class"> Graduation Year: <input id="gradBox" type="text" size="20"/></p>
+  <p class = "class"> User Icon (Image URL): <input id="iconBox" type="text" size="20"/></p>
     <p>
-    <button id="createButton">Create new user</button>
+    <button id="createButton">Register</button>
     <!--<button id="deleteButton">Delete  user</button>-->
     <!--<button id="updateButton">Update new user</button>-->
-    <button id="displayButton">Show someone's info</button>
-     <button id="loginPage">Back to Login</button>
+     <button id="loginPage">Return to Login</button>
      
     </p>
 
@@ -176,7 +175,7 @@ $(document).ready(function() {
   <div id = "lnameDiv"></div>
   <div id = "phoneDiv"></div>
   <div id = "gradYearDiv"></div>
-  <img id = "iconImg" style= "width: 300px"/> 
+  <img id = "iconImg" style= "width: 300px"></img>
  
   </body>
 </html>

@@ -2,22 +2,21 @@
 
 <head>
   <style type="text/css">
-  body{  }
-  h1{color:yellow;font-size:50; text-align: center;}
-  div{text-align: right;}
+   h1{color:yellow;font-size:50; text-align: center;}
+  div{text-align: center; font-size: 25; color:yellow;}
   div p{color:white; font-size:30;}
   
 
   ul{text-align: center list-style-type: none; margin: 0; padding: 0;}
-  button{text-align: center;}
+  
   li{display: inline; font-size: 25; color: white}
   body{
-    background-image: url("ur.jpg");
+    background-image: url("ur1.jpg");
     background-repeat: repeat-x;    }
   a{color: white}
-  img{ position: fixed;
-    top: 100;
-    left: 50;
+  img{ display: block;
+       margin-left: auto;
+       margin-right: auto;
     border: 10px solid yellow;}
     .new{
       text-align: center;
@@ -26,22 +25,119 @@
     .class{
       text-align: center;
     }
+    .button{
+     text-align: center; 
+    }
+    #showcategory{
+      color: white; font-size: 30;
+    }
 
 </style>
 
 <title>Main</title>
 
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
 <script type="text/javascript">
 
 $(document).ready(function() {
   // define a generic Ajax error handler:
   // http://api.jquery.com/ajaxerror/
+ var array = [];
+ var array1 = [];
+ function emptyDiv(){
+  for(var i = 0 ; i<array.length ; i++){
+    $("#"+array[i]+"").remove();
+    $("#"+array1[i]+"").remove();
+    
+
+    console.log(array[i]);
+    console.log(array1[i]);
+  }
+ }
+  
+
   $(document).ajaxError(function() {
-    alert("Sorry, there was a problem!");
+   
 
   });
+//http://stackoverflow.com/questions/4825683/how-do-i-create-and-read-a-value-from-cookie
+function getCookie(c_name) {
+    if (document.cookie.length > 0) {
+        c_start = document.cookie.indexOf(c_name + "=");
+        if (c_start != -1) {
+            c_start = c_start + c_name.length + 1;
+            c_end = document.cookie.indexOf(";", c_start);
+            if (c_end == -1) {
+                c_end = document.cookie.length;
+            }
+            return unescape(document.cookie.substring(c_start, c_end));
+        }
+    }
+    return "";
+}
+
+
+window.onload = function(){
+    var x = getCookie("username");
+    $.ajax({
+      // The URL for the request -- note the simple REST API!
+      // all URLs are relative to http://localhost:3000/
+      url: "users/"+ x ,
+      type: "GET",
+      dataType : "json", // this URL returns data in JSON format
+
+      success: function( data ) {
+        console.log("Received User Load Components", data);
+
+        if (data.username) {
+          $("#nameDiv").html("Welcome " + data.fname + "!");
+          $("#iconImg").attr("src", data.icon);
+        } 
+        else {
+          $("#status").html("Error: could not find user!");
+          $("#nameDiv").html("");
+          $("#iconImg").attr("src","");
+        }
+      
+      $.ajax({
+      url: "show/" ,
+      type: "GET",
+      dataType : "json", 
+
+
+      success: function(data) {
+        $("#showcategory").html("Showing all listings");
+        for( var i = 0 ; i < data.length; i++){
+         
+
+
+          $("body").append("<div  id ="+i+" >Item: "+data[i].itemName+" | Posted: "+data[i].date+" </div>");
+          array[i] = i;
+          $("body").append("<div id = "+(i+1)+" ><button id =  "+data[i].id+">View listing</button><br></div>");
+          array1[i] = i+1;
+          console.log(data[i].id);
+          
+
+          $("#"+data[i].id+"").click(function(){
+            sessionStorage.setItem('listing', this.id);
+            console.log(this.id);
+            window.location.href = "viewListing.html";
+
+          });
+        }
+
+        
+    },
+     });
+    },
+    });
+}
+function delete_cookie(name) {
+  document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
+
   $("#createButton").click(function() {
     window.location.href = "user.html";
     
@@ -60,123 +156,219 @@ $(document).ready(function() {
    $("#editListing").click(function(){
     window.location.href = "editListing.html";
    });
-});
 
-//http://stackoverflow.com/questions/4825683/how-do-i-create-and-read-a-value-from-cookie
-function getCookie(c_name) {
-    if (document.cookie.length > 0) {
-        c_start = document.cookie.indexOf(c_name + "=");
-        if (c_start != -1) {
-            c_start = c_start + c_name.length + 1;
-            c_end = document.cookie.indexOf(";", c_start);
-            if (c_end == -1) {
-                c_end = document.cookie.length;
-            }
-            return unescape(document.cookie.substring(c_start, c_end));
-        }
-    }
-    return "";
-}
-window.onload = function(){
-    var x = getCookie("username");
+   $("#all").click(function() {
+    emptyDiv();
     $.ajax({
-      // The URL for the request -- note the simple REST API!
-      // all URLs are relative to http://localhost:3000/
-      url: "users/" + x,
+      url: "show/" ,
       type: "GET",
-      dataType : "json", // this URL returns data in JSON format
+      dataType : "json", 
 
-      success: function( data ) {
-        console.log("Received User Load Components", data);
-
-        if (data.username) {
-          $("#nameDiv").html("Welcome " + data.fname + "!");
-          $("#iconImg").attr("src", data.icon);
-        } 
-        else {
-          $("#status").html("Error: could not find user!");
-          $("#nameDiv").html("");
-          $("#iconImg").attr("src","");
-        }
-      },
-    });
-}
-function delete_cookie(name) {
-  document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-}
-$("#book").click(function() {
-   
-    $.ajax({
-      // The URL for the request -- note the simple REST API!
-      // all URLs are relative to http://localhost:3000/
-      url: "listing/" ,
-      type: "GET",
-      dataType : "json", // this URL returns data in JSON format
 
       success: function(data) {
-        console.log("You received some data!", data);
+        $("#showcategory").html("Showing all listings");
+        for( var i = 0 ; i < data.length; i++){
+         
 
-        if (data.username) {
-          $("#usernameDiv").html("Username: " + data.username);
-          $("#fnameDiv").html("First name is: " + data.fname);
-          $("#lnameDiv").html("Last name is: " + data.lname);
-          $("#phoneDiv").html("Phone Number: " + data.phone);
-          $("#gradYearDiv").html("Class of: " + data.year);
-          $("#iconImg").attr("src", data.icon);
-        } 
-        else {
-          $("#status").html("Error: could not find user!");
-          // clear the profile display
-          $("#fnameDiv").html("");
-          $("lnameDiv").html("");
-          $("#nameDiv").html("");
-          $("#phoneDiv").html("");
-          $("#gradYearDiv").html("");
-          $("#iconImg").attr("src","");
+
+          $("body").append("<div  id ="+i+" >Item: "+data[i].itemName+" | Posted: "+data[i].date+" </div>");
+          array[i] = i;
+          $("body").append("<div id = "+(i+1)+" ><button id =  "+data[i].id+">View listing</button><br></div>");
+          array1[i] = i+1;
+          console.log(data[i].id);
+          
+
+          $("#"+data[i].id+"").click(function(){
+            sessionStorage.setItem('listing', this.id);
+            console.log(this.id);
+            window.location.href = "viewListing.html";
+
+          });
         }
-      },
-    });
+
+        
+    },
   });
+   });
+  $("#books").click(function() {
+    emptyDiv();
+    
+    $.ajax({
+      url: "show/" + "Books",
+      type: "GET",
+      dataType : "json", 
+
+
+      success: function(data) {
+        $("#showcategory").html("Showing all Books");
+        for( var i = 0 ; i < data.length; i++){
+         
+
+
+          $("body").append("<div  id = "+i+">Item: "+data[i].itemName+" | Posted: "+data[i].date+"</div>");
+          array[i] = i;
+          $("body").append("<div id = "+(i+1)+" ><button id =  "+data[i].id+" >View listing</button><br></div>");
+          console.log(data[i].id);
+          array1[i] = i+1;
+          
+
+          $("#"+data[i].id+"").click(function(){
+            sessionStorage.setItem('listing', this.id);
+            console.log(this.id);
+            window.location.href = "viewListing.html";
+
+          });
+        }
+
+        
+    },
+  });
+   });
+    $("#Miscellaneous").click(function() {
+      emptyDiv();
+    $.ajax({
+      url: "show/" + "Miscellaneous",
+      type: "GET",
+      dataType : "json", 
+
+
+      success: function(data) {
+
+        $("#showcategory").html("Showing all Miscellaneous items");
+        for( var i = 0 ; i < data.length; i++){
+         
+
+
+          $("body").append("<div  id ="+i+">Item: "+data[i].itemName+" | Posted: "+data[i].date+"</div>");
+          array[i] = i;
+          $("body").append("<div id = "+(i+1)+" ><button id =  "+data[i].id+" >View listing</button><br></div>");
+          array1[i] = i + 1;
+          console.log(data[i].id);
+          
+
+          $("#"+data[i].id+"").click(function(){
+            sessionStorage.setItem('listing', this.id);
+            console.log(this.id);
+            window.location.href = "viewListing.html";
+
+          });
+        }
+
+        
+    },
+  });
+   });
+    $("#Electronics").click(function() {
+      emptyDiv();
+    $.ajax({
+      url: "show/" + "Electronics",
+      type: "GET",
+      dataType : "json", 
+
+
+      success: function(data) {
+        $("#showcategory").html("Showing all Electronics");
+        for( var i = 0 ; i < data.length; i++){
+         
+
+
+          $("body").append("<div  id ="+i+">Item: "+data[i].itemName+" | Posted: "+data[i].date+"</div>");
+          array[i] = i;
+          $("body").append("<div id = "+(i+1)+" ><button id =  "+data[i].id+" >View listing</button><br></div>");
+          array1[i] = i + 1;
+          console.log(data[i].id);
+          
+
+          $("#"+data[i].id+"").click(function(){
+            sessionStorage.setItem('listing', this.id);
+            console.log(this.id);
+            window.location.href = "viewListing.html";
+
+          });
+        }
+
+        
+    },
+  });
+   });
+    $("#Dorm").click(function() {
+      emptyDiv();
+    $.ajax({
+      url: "show/" + "Dorm Supplies",
+      type: "GET",
+      dataType : "json", 
+
+
+      success: function(data) {
+        $("#showcategory").html("Showing all Dorm Supplies");
+        for( var i = 0 ; i < data.length; i++){
+         
+
+
+          $("body").append("<div  id ="+i+">Item: "+data[i].itemName+" | Posted: "+data[i].date+"</div>");
+          array[i] = i;
+
+          $("body").append("<div id = "+(i+1)+" ><button id =  "+data[i].id+" >View listing</button><br></div>");
+          array1[i] = i+1;
+          console.log(data[i].id);
+          
+
+          $("#"+data[i].id+"").click(function(){
+            sessionStorage.setItem('listing', this.id);
+            console.log(this.id);
+            window.location.href = "viewListing.html";
+
+          });
+        }
+
+        
+    },
+  });
+   });
+
+  
+ 
+
+});
 
 </script>
 
 
 </head>  
    <body>
-  <h1>Welcome to UR Market</h1>
+    <h1>Welcome to UR Market</h1>
   
+<img id = "iconImg" style= "width: 300px" src = "logo.jpg"></img> 
 
   <div>
    <ul class = "class">
     <!--<li> <a href= "https://my.rochester.edu/"> Link to Blackboard</a></li>-->
     <!-- <li>Account info </li> -->
     <p id = "nameDiv"></p>
-    <button id = "editAccButton"> Edit Account </button>
-    <button id = "logoutButton"> Logout</button> 
-    <button id = "createListing"> Create a Listing</button> 
-    <button id = "editListing"> Edit your Listings</button> 
+    <button id = "editAccButton">Edit My Account</button>
+    <button id = "logoutButton">Logout</button> 
+    <button id = "createListing"> Create New Listing</button> 
+    <button id = "editListing"> Edit My Listings</button> 
 
    
     </ul>
 
 
-  <p class = "new">Select a category of listings to view!</p>
+  <p class = "new">Select a category to view listings</p>
 
 
   </div>
   <ul class = "class">
-     <button id = "book" > Books</button> 
-    <button id = "dorm" > Dorm Supplies</button> 
-    <button id = "electronics" > Electronics</button> 
-    <button id = "misc" > Miscellaneous</button> 
+     <button id = "books" > Books</button> 
+    <button id = "Dorm" > Dorm Supplies</button> 
+    <button id = "Electronics" > Electronics</button> 
+    <button id = "Miscellaneous" > Miscellaneous</button> 
     <button id = "all" > Show All</button> 
+    
   </ul>
-  
-  
-
-  <img id = "iconImg" style= "width: 300px"/> 
-
-
+  <br>
+  <div id = "showcategory"></div>
+  <br>
 
   </body>
 </html>

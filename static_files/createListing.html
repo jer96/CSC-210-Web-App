@@ -6,8 +6,6 @@
 
 $(document).ready(function() {
 
-  // define a generic Ajax error handler:
-  // http://api.jquery.com/ajaxerror/
   $(document).ajaxError(function() {
     alert("Sorry, there was a problem!");
   });
@@ -43,18 +41,10 @@ $(document).ready(function() {
         if (data.username) {
           console.log("Passing");
           document.getElementById('usernamebox').value = data.username;
-          document.getElementById('firstNameBox').value = data.fname;
-          document.getElementById('lastNameBox').value = data.lname;
-          document.getElementById('phoneBox').value= data.phone;
-          document.getElementById('gradBox').value = data.year;
         } 
         else {
           document.getElementById('usernamebox').value = "";
-          document.getElementById('firstNameBox').value = "";
-          document.getElementById('lastNameBox').value = "";
-          document.getElementById('phoneBox').value = "";
-          document.getElementById('gradBox').value = "";
-        }
+      }
       },
     });
 }
@@ -66,6 +56,7 @@ $(document).ready(function() {
     window.location.href = "homepage.html";
     
     });
+  var d = new Date();
 
 $("#createButton").click(function() {
   $.ajax({
@@ -79,19 +70,16 @@ $("#createButton").click(function() {
       itemDescription : document.getElementById('itemDescription').value,
       itemPrice : $("#priceBox").val(),
       username: document.getElementById('usernamebox').value,
-      fname: $("#firstNameBox").val(),
-      lname: $("#lastNameBox").val(),
-      phone: $("#phoneBox").val(),
-      year: $("#gradBox").val(),
-      icon: $("#").val(),
-      category : $("#drop").val()
+      icon: $("#iconBox").val(),
+      category : $("#drop").val(),
+      date: d.toDateString()
     },
 
     
     success : function(data){
       if(data == 'OK'){
         console.log('input into db');
-        $("#status").html("Successfully created a new user! return to UR market to see your listings");
+        $("#status").html("Successfully created a new listing! Return to UR Market Homepage to see your listings.");
       }
       else{
         console.log('error did not get into db');
@@ -105,22 +93,6 @@ $("#createButton").click(function() {
 
   });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 });
 
 </script>
@@ -130,10 +102,11 @@ $("#createButton").click(function() {
 
 <head>
   <style type="text/css">
-  body{ background-color: white }
-  .class{color:blue; text-align: left;}
-  
-  div{text-align: c;}
+  body{ background-image: url("ur1.jpg");
+    background-repeat: repeat-x;
+    text-align: center}
+
+  h1, p, div {color: white;}
 
 
   </style>
@@ -141,66 +114,31 @@ $("#createButton").click(function() {
 </head>
 
   <body>
-  <title>UR Market Listing</title>
+  <title>UR Market Create Listing</title>
  
-  <h1>Welcome to UR Market create listing page!</h1>
+  <h1>Create a new listing below:</h1>
   <!--<h1>Here you can create, update or delete your accout</h1>-->
-
-  <p> Please create your listing here!</p>
   
-  <div1>
-  <p0 class = "class"> Item Name: <input id="itemName" type="text" size="20"/> </p0>    
-  <br>
-  <br>
-  <p0 class = "class"> Item Condition: <input id="itemCondition" type="text" size="20"/> </p0> 
-  <br>
-  <br>
-  <p0 class = "class"> Price: <input id="priceBox" type="text" size="20"/> </p0>    
-  <br>
-  <br>
-  <textarea id="itemDescription" style="width:250px;height:150px;">Item Description</textarea>  
-  <br>
+  <p class = "class"> Item Name: <input id="itemName" type="text" size="20"/> </p>    
+  <p class = "class"> Item Condition: <input id="itemCondition" type="text" size="20"/> </p> 
+  <p class = "class"> Price: <input id="priceBox" type="text" size="20"/> </p>    
+  <textarea id="itemDescription" style="width:250px;height:150px;" placeholder = "Item description" ></textarea>  
    <p class = "class">Item Category </P>
-  <select id = "drop">
+  <select required id = "drop">
   <option value="Books">Books</option>
   <option value="Electronics">Electronics</option>
-  <option value="Dorm Supplies">Dorm</option>
+  <option value="Dorm Supplies">Dorm Supplies</option>
   <option value="Miscellaneous">Miscellaneous</option>
   </select>
-  <br>
-  <br>
-  <p4 class = "class"> Item image URL: <input id="iconBox" type="text" size="20"/></p4>
-  <br>
-  <br>
-
-  </div>
-</div1>
-
-  <div>
-   <p5 class = "class"> Email: <input id="usernamebox" type="text" size="14"/> </p5>    
-  <p0 class = "class"> First Name: <input id="firstNameBox" type="text" size="14"/> </p0>    
-  <p1 class = "class"> Last Name: <input id="lastNameBox" type="text" size="19"/> </p1>
-  <br>
-  <br>
-  <p2 class = "class"> Phone number: <input id="phoneBox" type="text" size="20"/> </p2>
-  <br>
-  <br>
-  <p3 class = "class"> Graduation Year: <input id="gradBox" type="text" size="20"/></p3>
-  <br>
-  
-
-
-
-   
+  <p class = "class"> Item Image (URL): <input id="iconBox" type="text" size="20"/></p>
+  <p class = "class"> Your Email: <input id="usernamebox" type="text" size="20"/> </p> 
 
     <p>
-    <button id="createButton">Create new listing!</button>
-     <button id="back">Back to Homepage</button>
-     
+    <button id="createButton">Create Listing</button>
+     <button id="back">Return to Homepage</button>
     </p>
-
-<!--empty place holders to show info on screen-->
     <div id = "status"></div>
+ 
  
   </body>
 </html>

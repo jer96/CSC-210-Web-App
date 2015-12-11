@@ -1,0 +1,210 @@
+<html>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+  var email = "nothing";
+  var item = "nothing";
+
+  // define a generic Ajax error handler:
+  // http://api.jquery.com/ajaxerror/
+  $(document).ajaxError(function () {
+  // alert("Sorry, there was a problem!");
+  console.log("there was an ajax error");
+   
+  });
+  function delete_cookie(name) {
+  document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
+function getCookie(c_name) {
+    if (document.cookie.length > 0) {
+        c_start = document.cookie.indexOf(c_name + "=");
+        if (c_start != -1) {
+            c_start = c_start + c_name.length + 1;
+            c_end = document.cookie.indexOf(";", c_start);
+            if (c_end == -1) {
+                c_end = document.cookie.length;
+            }
+            return unescape(document.cookie.substring(c_start, c_end));
+        }
+    }
+    return "";
+}
+
+ $("#sendEmail").click(function(){  
+        var to ,text;    
+        console.log(email);
+        to = email,
+        text= "The user: " + getCookie("username") + " is interested in purchasing your listing of: " +  item + 
+                "\nPlease contact this user if your are still interested in selling this listing, otherwise please remove your item and notify the user of the removed listing." + 
+                "\nThank you for using URMarket!" + "\n -Meliora" ,
+
+        $.get("http://localhost:3000/send",{to:to,text:text},function (data){
+        if(data=="sent")
+        {
+            console.log("sent");
+            $("#status1").html("An email has been sent to  the seller");
+        }
+        else{
+          $("#status1").html(" Did not send email to seller, make sure your username is a email");
+          console.log("not sent");
+        }
+
+});
+    });
+$("#return").click(function(){
+  window.location.href = "homepage.html";
+});
+
+window.onload = function(){
+    var x = sessionStorage.getItem('listing');
+
+    $.ajax({
+      url: "view/" + x,
+      type: "GET",
+      dataType : "json",
+        
+        success: function(data) {
+              $("#itemNameDiv").html("Item name: " + data.itemName);
+              item = data.itemName;
+              $("#itemCondDiv").html("Item Condition: " + data.itemCondition);
+              $("#itemPriceDiv").html("Price: " + data.itemPrice);
+              $("#itemDescDiv").html("Description: " + data.itemDescription);
+              $("#iconImgDiv").attr("src", data.icon);
+              $("#itemCatDiv").html("Item Cataegory: " + data.category);
+              $("#date").html("Posted on: " + data.date);
+              
+              $.ajax({
+                url: "seller/" + data.username,
+                type: "GET",
+                dataType: "json",
+                success:function(data){
+                  $("#sellerfName").html("Seller first name: " + data.fname);
+                  $("#sellerlName").html("Seller last name: " + data.lname);
+                  $("#sellerEmail").html("Seller email: " + data.username);
+                  email = data.username;
+                  
+
+
+                },
+              });
+                      
+          
+        
+    },
+  });
+    
+  
+    }
+
+
+       
+    
+
+});
+
+
+
+
+</script>
+<head>
+
+  <style type="text/css">
+
+  body{ background-image: url("ur1.jpg");
+
+    background-repeat: repeat-x;
+
+    text-align: center}
+
+
+
+  h1, p, div{color: white;}
+  #status1{
+    color: Yellow; font-size:25; 
+  }
+
+
+
+  img{ display: block;
+
+       margin-left: auto;
+
+       margin-right: auto;}
+
+
+
+  </style>
+
+
+
+</head>
+
+
+
+  <body>
+
+  <title>UR Market View Listing</title>
+
+
+
+  <h1>For Sale:</h1>
+
+   
+
+
+  
+  <div id = "status"></div>
+
+  
+
+  <div id= "itemNameDiv"></div>
+
+  <br>
+
+  <div id= "itemCondDiv"></div>
+
+  <br>
+
+  <div id= "itemPriceDiv"></div>
+
+  <br>
+
+  <div id= "itemDescDiv"></div>
+
+  <br>
+
+  <div id= "itemCatDiv"></div>
+
+  <br>
+
+  <div id = "date"></div>
+
+  <br>
+
+  <img id = "iconImgDiv" style= "width: 300px"></img> 
+
+  <br>
+
+  <div id= "sellerfName"></div>
+
+  <br>
+
+  <div id= "sellerlName"></div>
+
+  <br>
+
+  <div id= "sellerEmail"></div>
+
+  <p>If you are interested in purchasing this listing click "Email seller" and an email will be sent to the seller expressing your interest and the seller will contact you as soon as possible</p>
+
+  <button id = "sendEmail" >Email Seller</button> 
+  <button id = "return" >Return to homepage</button> 
+  <div id = "status1"></div>
+
+   
+
+  </body>
+</html>
