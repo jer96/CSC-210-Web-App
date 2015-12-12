@@ -1,3 +1,2 @@
-#Web-App
-UR Market web app for CSC 210 
+#UR Market
 Programmed with Node.js, MYSQL, HTML,JavaScript
