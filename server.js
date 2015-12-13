@@ -186,8 +186,7 @@ con.release();
 //Find listings specific to a user
 app.get('/listings/*', function (req, res) {
   var nameToLookup = req.params[0];
-  console.log(nameToLookup+ " server communication"); // this matches the '*' part of '/users/*' above
-  // try to look up in fakeDatabase
+  console.log(nameToLookup+ " server communication");
   pool.getConnection(function(err, con){
 
   con.query('SELECT * FROM listing  where username = ? ',nameToLookup , function(err,rows){
