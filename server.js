@@ -39,8 +39,8 @@ var emailer = require('nodemailer');
 var transporter = emailer.createTransport({
   service: 'Gmail',
   auth:{
-    user: 'urmarket1234@gmail.com',
-    pass: '*O-line96'
+    user: '******',
+    pass: '******'
   }
 });
 
